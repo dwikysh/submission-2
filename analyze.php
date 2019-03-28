@@ -1,12 +1,25 @@
+<?php
+if(isset($_POST['submit'])){
+  if(isset($_POST['url'])){
+    $url_file=$_POST['url'];
+
+  }
+}
+else {
+  header("Location:phpQS.php");
+}
+
+ ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Analyze Sample</title>
+    <title>Analyze foto</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 </head>
-<body>
+<body onload="processImage()">
 
 <script type="text/javascript">
+
     function processImage() {
         // **********************************************
         // *** Update or verify the following values. ***
@@ -34,7 +47,7 @@
         };
 
         // Display the image.
-        var sourceImageUrl = document.getElementById("inputImage").value;
+        var sourceImageUrl ="<?php echo $url_file ?>";
         document.querySelector("#sourceImage").src = sourceImageUrl;
 
         // Make the REST API call.
@@ -71,12 +84,12 @@
 </script>
 
 <h1>Analyze image:</h1>
-Enter the URL to an image, then click the <strong>Analyze image</strong> button.
+Hasil analisis gambar anda sebagai berikut :
 <br><br>
 Image to analyze:
 <input type="text" name="inputImage" id="inputImage"
-    value="http://upload.wikimedia.org/wikipedia/commons/3/3c/Shaki_waterfall.jpg" />
-<button onclick="processImage()">Analyze image</button>
+    value="<?php echo $url_file ?>" />
+<!-- <button onclick="processImage()">Analyze image</button> -->
 <br><br>
 <div id="wrapper" style="width:1020px; display:table;">
     <div id="jsonOutput" style="width:600px; display:table-cell;">

@@ -9,15 +9,16 @@ $connectionString = "DefaultEndpointsProtocol=https;AccountName=dwikywebapp;Acco
 $blobClient = BlobRestProxy::createBlobService($connectionString);
 $containerName = "dwikycontainer";
 
+$listBlobsOptions = new ListBlobsOptions();
+$listBlobsOptions->setPrefix("");
+$result = $blobClient->listBlobs($containerName, $listBlobsOptions);
+
 if (isset($_POST['submit'])) {
 	$fileToUpload = strtolower($_FILES["fileToUpload"]["name"]);
 	$content = fopen($_FILES["fileToUpload"]["tmp_name"], "r");
 	$blobClient->createBlockBlob($containerName, $fileToUpload, $content);
 	header("Location: phpQS.php");
 }
-$listBlobsOptions = new ListBlobsOptions();
-$listBlobsOptions->setPrefix("");
-$result = $blobClient->listBlobs($containerName, $listBlobsOptions);
 ?>
 
 <!DOCTYPE html>
@@ -58,17 +59,17 @@ $result = $blobClient->listBlobs($containerName, $listBlobsOptions);
         <br>
 				<input type="submit" name="submit" value="Upload file" >
 			</form>
+<?php      if($result->getBlobs()!=null){?>
 
-		<h2>jumlah file : <?php echo sizeof($result->getBlobs())?></h2>
 		<table class="table">
-			<thead>
+			<head>
 				<tr>
-          <th>No</th>
+
 					<th>Nama File</th>
 					<th>URL file</th>
 					<th>Action</th>
 				</tr>
-			</thead>
+			</head>
 			<tbody>
 				<?php
 				do {
@@ -76,9 +77,8 @@ $result = $blobClient->listBlobs($containerName, $listBlobsOptions);
 					{
 						?>
 						<tr >
-              <td style="text-align: center; vertical-align: middle;" bgcolor="#ffccff"><?php for($i=1;$i<=sizeof($result->getBlobs());$i++){
-                echo $i;
-              }?></td>
+
+              </td>
 							<td style="text-align: center; vertical-align: middle;" bgcolor="#fff0b3"><?php echo $blob->getName() ?></td>
 							<td style="text-align: center; vertical-align: middle;" bgcolor="#ff8080"><?php echo $blob->getUrl() ?></td>
 							<td style="text-align: center; vertical-align: middle;" >
@@ -115,7 +115,9 @@ $result = $blobClient->listBlobs($containerName, $listBlobsOptions);
       echo $code.": ".$error_message."<br />";
   }
 }
+}
 ?>
+	<h3>jumlah file : <?php echo sizeof($result->getBlobs())?></h3>
 <form method="post" action="phpQS.php?Cleanup&containerName=<?php echo $containerName; ?>">
     <button type="submit">Press to clean up all resources created by this sample</button>
 </form>
